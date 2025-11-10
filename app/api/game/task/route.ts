@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
     if (!existingPlayer) {
       const { error: playerInsertError } = await supabase
         .from('players')
-        .insert({
+        .insert([{
           id: payload.player_id,
           name: payload.player_nick,
           realm: payload.realm,
-        });
+        }]);
 
       if (playerInsertError) {
         console.error('Błąd tworzenia gracza:', playerInsertError);
@@ -69,11 +69,11 @@ export async function POST(request: NextRequest) {
     if (!existingExplorerType) {
       const { data: newExplorerType, error: explorerTypeInsertError } = await supabase
         .from('explorers_info')
-        .insert({
+        .insert([{
           default_name: payload.explorer_name,
           explorer_type: payload.explorer_type,
           explorer_icon: payload.explorer_icon,
-        })
+        }])
         .select()
         .single();
 
@@ -111,13 +111,13 @@ export async function POST(request: NextRequest) {
       
       const { error: explorerPlayerInsertError } = await supabase
         .from('explorer_players')
-        .insert({
+        .insert([{
           id: uniqueId,
           player_id: payload.player_id,
           explorer_type_id: explorerTypeId,
           explorer_name: payload.explorer_name,
           explorer_id: payload.explorer_id,
-        });
+        }]);
 
       if (explorerPlayerInsertError) {
         console.error('Błąd tworzenia explorer_player:', explorerPlayerInsertError);
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
 
     const { error: actionInsertError } = await supabase
       .from('explorers_actions')
-      .insert({
+      .insert([{
         action_id: actionId,
         player_id: payload.player_id,
         explorer_id: payload.explorer_id,
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
         task_name: payload.task_name,
         timestamp: timestamp,
         return_time: payload.return_time,
-      });
+      }]);
 
     if (actionInsertError) {
       console.error('Błąd dodawania akcji:', actionInsertError);
